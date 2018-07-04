@@ -1,4 +1,6 @@
-mkdir Commands
+IF NOT EXIST Commands (
+    mkdir Commands
+)
 cd Commands
 
 ::Download Dependencies
@@ -33,4 +35,3 @@ done
 ::Install WebJob
 
 mkdir %HOME%\site\wwwroot\app_data\jobs\triggered
-mv %HOME%\SiteExtensions\JekyllExtension\Hooks\jekyll-build %HOME%\site\wwwroot\app_data\jobs\triggered\jekyll-build
