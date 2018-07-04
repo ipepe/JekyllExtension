@@ -3,7 +3,7 @@
 	<metadata>
 		<id>MiddlemanExtension</id>
 		<title>Middleman</title>
-		<version>0.0.1</version>
+		<version>0.0.3</version>
 		<authors>Cory Fowler, Patryk Ptasiński</authors>
 		<licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
 		<projectUrl>https://github.com/ipepe/MiddlemanExtension</projectUrl>

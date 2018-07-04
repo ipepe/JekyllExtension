@@ -1,39 +1,47 @@
+REM mkdir SiteExtensions\MiddlemanExtension
+
 IF NOT EXIST Commands (
     mkdir Commands
 )
-cd Commands
+pushd .\Commands
 
-::Download Dependencies
-curl -L -o Ruby-2.2.3.zip http://dl.bintray.com/oneclick/rubyinstaller/ruby-2.2.2-i386-mingw32.7z
-start /wait d:\7zip\7za x Ruby-2.2.3.zip -oRuby-2.2.3
-
+echo Download Dependencies
+curl -L -o Ruby-2.3.3.zip http://dl.bintray.com/oneclick/rubyinstaller/ruby-2.3.3-i386-mingw32.7z
 curl -L -o RubyDevKit.exe http://dl.bintray.com/oneclick/rubyinstaller/defunct/DevKit-tdm-32-4.5.2-20110712-1620-sfx.exe
-start /wait d:\7zip\7za x RubyDevKit.exe -oRubyDevKit
+curl -L -k -o GlobalSignRootCA.pem https://raw.githubusercontent.com/rubygems/rubygems/master/lib/rubygems/ssl_certs/index.rubygems.org/GlobalSignRootCA.pem
 
-::Clean up Zip Files
-rm Ruby-2.2.3.zip
+echo
+
+echo Unpacking Dependencies
+start /wait d:\7zip\7za x Ruby-2.3.3.zip -oRuby-2.3.3
+start /wait d:\7zip\7za x RubyDevKit.exe -oRubyDevKit
+cp GlobalSignRootCA.pem %HOME%\SiteExtensions\MiddlemanExtension\Commands\Ruby-2.3.3\ruby-2.3.3-i386-mingw32\lib\ruby\2.2.0\rubygems\ssl_certs\GlobalSignRootCA.pem
+
+echo Configure RubyDevKit
+
+pushd RubyDevKit
+
+SET PATH=%PATH%;%HOME%\SiteExtensions\MiddlemanExtension\Commands\Ruby-2.3.3\ruby-2.3.3-i386-mingw32\bin
+
+call ruby dk.rb init
+echo - %HOME%/SiteExtensions/MiddlemanExtension/Commands/Ruby-2.3.3/ruby-2.3.3-i386-mingw32 >> config.yml
+call ruby dk.rb install
+
+popd
+
+echo Clean up Zip Files
+rm Ruby-2.3.3.zip
 rm RubyDevKit.exe
 
-::Configure RubyDevKit
+echo Install Bundler and Middleman
 
-cd RubyDevKit
+SET SSL_CERT_FILE=D:\Program Files\Git\usr\ssl\certs
 
-call %HOME%\SiteExtensions\MiddlemanExtension\Commands\Ruby-2.2.3\ruby-2.2.2-i386-mingw32\bin\ruby dk.rb init
-echo - %HOMEDRIVE%/home/SiteExtensions/MiddlemanExtension/Commands/Ruby-2.2.3/ruby-2.2.2-i386-mingw32 >> config.yml
-call %HOME%\SiteExtensions\MiddlemanExtension\Commands\Ruby-2.2.3\ruby-2.2.2-i386-mingw32\bin\ruby dk.rb install
+call gem install bundler middleman --no-ri --no-rdoc
 
-::Install Middleman
+echo Install WebJob
+mkdir %HOME%\site\wwwroot\app_data\jobs\triggered\middleman-build
+cp %HOME%\SiteExtensions\MiddlemanExtension\Hooks\middleman-build\run.cmd %HOME%\site\wwwroot\app_data\jobs\triggered\middleman-build\run.cmd
+cp %HOME%\SiteExtensions\MiddlemanExtension\Hooks\middleman-build\settings.job %HOME%\site\wwwroot\app_data\jobs\triggered\middleman-build\settings.job
 
-SET SSL_CERT_FILE=%PROGRAMFILES(x86)%\git\usr\ssl\certs\ca-bundle.crt
-
-for filename in `cat $INSTALL_GEMS` ; do
-
-    call %HOME%\SiteExtensions\MiddlemanExtension\Commands\Ruby-2.2.3\ruby-2.2.2-i386-mingw32\bin\gem install $filename
-
-done
-
-::Install WebJob
-IF NOT EXISTS %HOME%\site\wwwroot\app_data\jobs\triggered (
-    mkdir %HOME%\site\wwwroot\app_data\jobs\triggered
-)
-mv %HOME%\SiteExtensions\MiddlemanExtension\Hooks\middleman-build %HOME%\site\wwwroot\app_data\jobs\triggered\middleman-build
+popd

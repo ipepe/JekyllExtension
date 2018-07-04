@@ -56,8 +56,10 @@ IF !ERRORLEVEL! NEQ 0 goto error
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :: Build Static Site
 
+pushd %DEPLOYMENT_SOURCE%
 call bundle install --without=development,test
-call bundle exec middleman build --source="%DEPLOYMENT_SOURCE%" --build-dir="%DEPLOYMENT_TARGET%"
+call bundle exec middleman build --build-dir="%DEPLOYMENT_TARGET%"
+popd
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :: Post deployment stub
