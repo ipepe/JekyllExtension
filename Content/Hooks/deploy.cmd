@@ -56,7 +56,8 @@ IF !ERRORLEVEL! NEQ 0 goto error
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :: Build Static Site
 
-call jekyll build -s "%DEPLOYMENT_SOURCE%" -d "%DEPLOYMENT_TARGET%" --config %DEPLOYMENT_SOURCE%/_config.yml,%HOME%/siteextensions/JekyllExtension/Hooks/save_webjobs.yml
+call bundle install --without=development,test
+call bundle exec middleman build --source="%DEPLOYMENT_SOURCE%" --build-dir="%DEPLOYMENT_TARGET%"
 
 ::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 :: Post deployment stub

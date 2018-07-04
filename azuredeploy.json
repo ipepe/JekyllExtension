@@ -4,7 +4,7 @@
     "parameters": {
         "siteName": {
             "type": "string",
-            "defaultValue": "[concat('jekyllsite-', uniqueString(resourceGroup().id))]"
+            "defaultValue": "[concat('middlemansite-', uniqueString(resourceGroup().id))]"
         },
         "siteSKU": {
             "type": "string",
@@ -28,14 +28,14 @@
         "additional-gems": {
             "type": "string",
             "metadata": {
-                "description": "Space delimited list of gems to install. default: jekyll kramdown rdiscount redcarpet"
+                "description": "Space delimited list of gems to install. default: bundler middleman middleman-compass middleman-sprockets"
             }
         }
     },
     "variables": {
         "hostingPlanName": "[concat(parameters('siteName'), '-plan')]",
-        "extensionName": "JekyllExtension",
-        "gems": "[concat('jekyll kramdown rdiscount redcarpet ', parameters('additional-gems'))]"
+        "extensionName": "MiddlemanExtension",
+        "gems": "[concat('bundler middleman middleman-compass middleman-sprockets ', parameters('additional-gems'))]"
     },
     "resources": [
         {
@@ -69,7 +69,7 @@
                     "properties": {
                         "SSL_CERT_FILE": "%PROGRAMFILES(x86)%\\git\\usr\\ssl\\certs\\ca-bundle.crt",
                         "SCM_COMMAND_IDLE_TIMEOUT": "600",
-                        "COMMAND": "D:\\home\\SiteExtensions\\JekyllExtension\\Hooks\\deploy.cmd",
+                        "COMMAND": "D:\\home\\SiteExtensions\\MiddlemanExtension\\Hooks\\deploy.cmd",
                         "INSTALL_GEMS": "[variables('gems')]"
                     }
                 },

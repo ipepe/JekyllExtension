@@ -1,4 +1,6 @@
-mkdir Commands
+IF NOT EXIST Commands (
+    mkdir Commands
+)
 cd Commands
 
 ::Download Dependencies
@@ -16,21 +18,22 @@ rm RubyDevKit.exe
 
 cd RubyDevKit
 
-call %HOME%\SiteExtensions\JekyllExtension\Commands\Ruby-2.2.3\ruby-2.2.2-i386-mingw32\bin\ruby dk.rb init
-echo - %HOMEDRIVE%/home/SiteExtensions/JekyllExtension/Commands/Ruby-2.2.3/ruby-2.2.2-i386-mingw32 >> config.yml
-call %HOME%\SiteExtensions\JekyllExtension\Commands\Ruby-2.2.3\ruby-2.2.2-i386-mingw32\bin\ruby dk.rb install
+call %HOME%\SiteExtensions\MiddlemanExtension\Commands\Ruby-2.2.3\ruby-2.2.2-i386-mingw32\bin\ruby dk.rb init
+echo - %HOMEDRIVE%/home/SiteExtensions/MiddlemanExtension/Commands/Ruby-2.2.3/ruby-2.2.2-i386-mingw32 >> config.yml
+call %HOME%\SiteExtensions\MiddlemanExtension\Commands\Ruby-2.2.3\ruby-2.2.2-i386-mingw32\bin\ruby dk.rb install
 
-::Install Jekyll
+::Install Middleman
 
 SET SSL_CERT_FILE=%PROGRAMFILES(x86)%\git\usr\ssl\certs\ca-bundle.crt
 
 for filename in `cat $INSTALL_GEMS` ; do
 
-    call %HOME%\SiteExtensions\JekyllExtension\Commands\Ruby-2.2.3\ruby-2.2.2-i386-mingw32\bin\gem install $filename 
+    call %HOME%\SiteExtensions\MiddlemanExtension\Commands\Ruby-2.2.3\ruby-2.2.2-i386-mingw32\bin\gem install $filename
 
 done
 
 ::Install WebJob
-
-mkdir %HOME%\site\wwwroot\app_data\jobs\triggered
-mv %HOME%\SiteExtensions\JekyllExtension\Hooks\jekyll-build %HOME%\site\wwwroot\app_data\jobs\triggered\jekyll-build
+IF NOT EXISTS %HOME%\site\wwwroot\app_data\jobs\triggered (
+    mkdir %HOME%\site\wwwroot\app_data\jobs\triggered
+)
+mv %HOME%\SiteExtensions\MiddlemanExtension\Hooks\middleman-build %HOME%\site\wwwroot\app_data\jobs\triggered\middleman-build
