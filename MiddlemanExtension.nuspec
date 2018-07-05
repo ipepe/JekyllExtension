@@ -2,15 +2,15 @@
 <package>
 	<metadata>
 		<id>MiddlemanExtension</id>
-		<title>Middleman</title>
-		<version>0.0.6</version>
+		<title>Middleman 3</title>
+		<version>3.0.7</version>
 		<authors>Cory Fowler, Patryk Ptasiński</authors>
 		<licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
 		<projectUrl>https://github.com/ipepe/MiddlemanExtension</projectUrl>
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
-		<description>Adds Middleman Support to Azure Web App</description>
+		<description>Adds Middleman v3 Support to Azure Web App</description>
 		<iconUrl>https://raw.githubusercontent.com/ipepe/MiddlemanExtension/master/middleman.png</iconUrl>
-		<tags>AzureSiteExtension ruby middleman staticsite</tags>
+		<tags>AzureSiteExtension ruby middleman 3 staticsite</tags>
         <packageTypes>
           <packageType name="AzureSiteExtension" />
         </packageTypes>
