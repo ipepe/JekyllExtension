@@ -13,15 +13,13 @@ pushd .\Commands
 pushd %temp%
 
 echo Download Dependencies
-curl -L -o Ruby-2.3.3.zip http://dl.bintray.com/oneclick/rubyinstaller/ruby-2.3.3-i386-mingw32.7z
-curl -L -o RubyDevKit.exe http://dl.bintray.com/oneclick/rubyinstaller/defunct/DevKit-tdm-32-4.5.2-20110712-1620-sfx.exe
-curl -L -k -o GlobalSignRootCA.pem https://raw.githubusercontent.com/rubygems/rubygems/master/lib/rubygems/ssl_certs/index.rubygems.org/GlobalSignRootCA.pem
-
-echo -
+curl -LOs http://dl.bintray.com/oneclick/rubyinstaller/ruby-2.3.3-i386-mingw32.7z
+curl -LOs http://dl.bintray.com/oneclick/rubyinstaller/defunct/DevKit-tdm-32-4.5.2-20110712-1620-sfx.exe
+curl -LOks https://raw.githubusercontent.com/rubygems/rubygems/master/lib/rubygems/ssl_certs/index.rubygems.org/GlobalSignRootCA.pem
 
 echo Unpacking Dependencies
-start /wait d:\7zip\7za x Ruby-2.3.3.zip -o%HOME%\SiteExtensions\MiddlemanExtension\Commands\Ruby-2.3.3
-start /wait d:\7zip\7za x RubyDevKit.exe -o%HOME%\SiteExtensions\MiddlemanExtension\Commands\RubyDevKit
+start /wait d:\7zip\7za x ruby-2.3.3-i386-mingw32.7z -o%HOME%\SiteExtensions\MiddlemanExtension\Commands\Ruby-2.3.3
+start /wait d:\7zip\7za x DevKit-tdm-32-4.5.2-20110712-1620-sfx.exe -o%HOME%\SiteExtensions\MiddlemanExtension\Commands\RubyDevKit
 cp GlobalSignRootCA.pem %HOME%\SiteExtensions\MiddlemanExtension\Commands\Ruby-2.3.3\ruby-2.3.3-i386-mingw32\lib\ruby\2.3.0\rubygems\ssl_certs\GlobalSignRootCA.pem
 
 popd
@@ -39,8 +37,8 @@ call ruby dk.rb install
 popd
 
 echo Clean up Zip Files
-rm %temp%\Ruby-2.3.3.zip
-rm %temp%\RubyDevKit.exe
+rm %temp%\ruby-2.3.3-i386-mingw32.7z
+rm %temp%\DevKit-tdm-32-4.5.2-20110712-1620-sfx.exe
 
 echo Install Bundler and Middleman
 
