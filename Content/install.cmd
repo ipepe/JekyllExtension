@@ -1,51 +1,28 @@
-REM mkdir SiteExtensions\MiddlemanExtension
+REM mkdir SiteExtensions\MiddlemanExtension & cd SiteExtensions\MiddlemanExtension & install
 
 echo Install WebJob
 mkdir %HOME%\site\wwwroot\app_data\jobs\triggered\middleman-build
 cp %HOME%\SiteExtensions\MiddlemanExtension\Hooks\middleman-build\run.cmd %HOME%\site\wwwroot\app_data\jobs\triggered\middleman-build\run.cmd
 cp %HOME%\SiteExtensions\MiddlemanExtension\Hooks\middleman-build\settings.job %HOME%\site\wwwroot\app_data\jobs\triggered\middleman-build\settings.job
 
-IF NOT EXIST Commands (
-    mkdir Commands
-)
-pushd .\Commands
+REM set JRUBY_VERSION=9.0.5.0  Stops at erubis native extensions (early)
+REM set JRUBY_VERSION=9.1.17.0 Stops at parallel native extensions (a bit later)
+REM set JRUBY_VERSION=9.2.0.0  Does nothing when starting jruby or jgem
 
-pushd %temp%
+echo Install JRuby
+set JRUBY_VERSION=9.1.17.0
+set JRUBY_HOME=%HOME%\SiteExtensions\MiddlemanExtension\jruby-%JRUBY_VERSION%
+set JRUBY_EXE=%JRUBY_HOME%\bin\jruby.exe
+set PATH=%PATH%;JRUBY_HOME%\bin
+set JAVA_OPTS=-Djava.net.preferIPv4Stack=true
 
-echo Download Dependencies
-curl -L -o Ruby-2.3.3.zip http://dl.bintray.com/oneclick/rubyinstaller/ruby-2.3.3-i386-mingw32.7z
-curl -L -o RubyDevKit.exe http://dl.bintray.com/oneclick/rubyinstaller/defunct/DevKit-tdm-32-4.5.2-20110712-1620-sfx.exe
-curl -L -k -o GlobalSignRootCA.pem https://raw.githubusercontent.com/rubygems/rubygems/master/lib/rubygems/ssl_certs/index.rubygems.org/GlobalSignRootCA.pem
+:: Installing JRuby
+pushd %HOME%\SiteExtensions\MiddlemanExtension
+curl -LOs https://s3.amazonaws.com/jruby.org/downloads/%JRUBY_VERSION%/jruby-bin-%JRUBY_VERSION%.zip
+unzip -q jruby-bin-%JRUBY_VERSION%.zip & rm -f jruby-bin-%JRUBY_VERSION%.zip
 
-echo -
+echo Updating rubygems
+%JRUBY_EXE% -S gem update --system
 
-echo Unpacking Dependencies
-start /wait d:\7zip\7za x Ruby-2.3.3.zip -o%HOME%\SiteExtensions\MiddlemanExtension\Commands\Ruby-2.3.3
-start /wait d:\7zip\7za x RubyDevKit.exe -o%HOME%\SiteExtensions\MiddlemanExtension\Commands\RubyDevKit
-cp GlobalSignRootCA.pem %HOME%\SiteExtensions\MiddlemanExtension\Commands\Ruby-2.3.3\ruby-2.3.3-i386-mingw32\lib\ruby\2.3.0\rubygems\ssl_certs\GlobalSignRootCA.pem
-
-popd
-
-echo Configure RubyDevKit
-
-pushd RubyDevKit
-
-SET PATH=%PATH%;%HOME%\SiteExtensions\MiddlemanExtension\Commands\Ruby-2.3.3\ruby-2.3.3-i386-mingw32\bin
-
-call ruby dk.rb init
-echo - %HOME%/SiteExtensions/MiddlemanExtension/Commands/Ruby-2.3.3/ruby-2.3.3-i386-mingw32 >> config.yml
-call ruby dk.rb install
-
-popd
-
-echo Clean up Zip Files
-rm %temp%\Ruby-2.3.3.zip
-rm %temp%\RubyDevKit.exe
-
-echo Install Bundler and Middleman
-
-SET SSL_CERT_FILE=D:\Program Files\Git\usr\ssl\certs
-
-call gem install bundler middleman --no-ri --no-rdoc
-
-popd
+echo Installing bundler
+%JRUBY_EXE% -S gem install bundler middleman --no-ri --no-rdoc
