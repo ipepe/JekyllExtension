@@ -3,4 +3,13 @@ cd %HOME%/site/repository
 echo Installing dependencies
 call bundle install --without=development,test --deployment
 echo Building middleman
-call bundle exec middleman build --build-dir="%HOME%/site/wwwroot"
+
+IF NOT EXIST Gemfile (
+    call middleman build --build-dir="%HOME%/site/wwwroot"
+)
+
+IF EXIST Gemfile (
+    call bundle exec middleman build --build-dir="%HOME%/site/wwwroot"
+)
+
+echo Building finished
